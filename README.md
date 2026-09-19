@@ -153,7 +153,8 @@ write_verilog -noattr uart_netlist.v
 All I/O pins sit on the **west edge** of the die — the full `tx_data[7:0]` / `rx_data[7:0]` buses plus `tx`, `rx`, `tx_busy`, `rx_valid`, `reset_n`, `start_b`.
 
 <p align="center">
-  <img src="docs/images/08_io_pins.png" width="280" alt="I/O pin placement on the west edge">
+<img width="196" height="593" alt="Screenshot 2026-06-28 015325" src="https://github.com/user-attachments/assets/e17804b6-aecc-4dd5-af74-cadc7a67f284" />
+
 </p>
 
 Simple for a block this small — but it's also the root cause of the placement skew discussed below. ⚠️
@@ -163,7 +164,8 @@ Simple for a block this small — but it's also the root cause of the placement 
 `met1` rails run horizontally over each placement row; vertical straps on the upper metals stitch it down through vias.
 
 <p align="center">
-  <img src="docs/images/01_pdn_power_grid.png" width="500" alt="VDD power grid">
+ <img width="1857" height="977" alt="Screenshot 2026-06-27 011344" src="https://github.com/user-attachments/assets/df7437fe-7019-4969-a4b3-14edf7de8c05" />
+
 </p>
 
 | Property | Value |
@@ -181,7 +183,8 @@ Simple for a block this small — but it's also the root cause of the placement 
 ### 🗺️ Placement Density
 
 <p align="center">
-  <img src="docs/images/07_placement_density.png" width="500" alt="Placement density heat map">
+<img width="778" height="643" alt="Screenshot 2026-06-28 013138" src="https://github.com/user-attachments/assets/4941fb71-467a-442d-b0b8-7961f1221739" />
+
 </p>
 
 Warm/dense on the left, cool/empty on the right — a direct consequence of west-edge-only pin placement pulling the placer's centre of gravity left. 📉 Fine functionally at 50 MHz, but it's wasted area.
@@ -189,7 +192,8 @@ Warm/dense on the left, cool/empty on the right — a direct consequence of west
 ### 🌳 Clock Tree Synthesis
 
 <p align="center">
-  <img src="docs/images/03_clock_tree.png" width="500" alt="Clock tree viewer">
+<img width="1857" height="930" alt="Screenshot 2026-06-27 015605" src="https://github.com/user-attachments/assets/527bd259-9d9c-47ad-af47-aa1deb19ca68" />
+
 </p>
 
 ```text
@@ -217,8 +221,9 @@ clk ──▶ clkbuf_0_clk (clkbuf_1) ──▶ clknet_0_clk
 ### 🛤️ Routing & Congestion
 
 <p align="center">
-  <img src="docs/images/05_routing_congestion.png" width="420" alt="Routing congestion overview">
-  <img src="docs/images/06_congestion_zoom.png" width="420" alt="Congestion detail">
+ <img width="608" height="587" alt="Screenshot 2026-06-28 011011" src="https://github.com/user-attachments/assets/cff06584-b3cf-4fdc-bda3-10e537a44243" />
+<img width="692" height="328" alt="Screenshot 2026-06-28 011915" src="https://github.com/user-attachments/assets/8e4cab11-dee2-4f42-9746-45d94ca44a12" />
+
 </p>
 
 Global + detailed routing completed on `li1` + `met1`–`met5`. Hot spots appear in the **centre** of the core where both FSMs and the shared baud tick converge. 🔥
@@ -232,7 +237,8 @@ Global + detailed routing completed on `li1` + `met1`–`met5`. Hot spots appear
 ### ✅ Hold Analysis
 
 <p align="center">
-  <img src="docs/images/04_timing_report_hold.png" width="600" alt="Timing report — hold paths">
+<img width="1395" height="623" alt="Screenshot 2026-06-28 010416" src="https://github.com/user-attachments/assets/388d6e64-3bfd-4884-8921-f513a3a821e7" />
+
 </p>
 
 | Capture clock | Required | Arrival | Slack | Skew | Logic delay | Depth |
@@ -245,7 +251,8 @@ Worst hold slack **+0.770 ns**. Reported skew is **0.000 ns** on both paths — 
 ### ✅ Setup Analysis
 
 <p align="center">
-  <img src="docs/images/02_hold_slack_histogram.png" width="500" alt="Endpoint slack histogram">
+ <img width="1863" height="970" alt="Screenshot 2026-06-27 013403" src="https://github.com/user-attachments/assets/6cf640c5-8a57-4996-8a94-bcdcf68f4102" />
+
 </p>
 
 ```text
